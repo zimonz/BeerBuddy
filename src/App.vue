@@ -1,41 +1,64 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-card
+      class="overflow-hidden"
+      tile>
+        <v-app-bar
+          height="48"
+          class="blue-grey darken-3"
+          dark
+          dense
+        >
+          <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+          <v-toolbar-title>BeerBuddy</v-toolbar-title>
+        </v-app-bar>
+      </v-card>
 
-      <v-spacer></v-spacer>
+        <v-navigation-drawer
+          v-model="drawer"
+          absolute
+          temporary
+        >
+          <v-list
+            nav
+            dense
+          >
+            <v-list-item-group
+              v-model="group"
+              active-class="deep-purple--text text--accent-4"
+            >
+              <v-list-item to="/">
+                <v-list-item-icon>
+                  <v-icon>mdi-home</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Home</v-list-item-title>
+              </v-list-item>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+              <v-list-item to="/events">
+                <v-list-item-icon>
+                  <v-icon>mdi-calendar-multiple</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Events</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to="/debts">
+                <v-list-item-icon>
+                  <v-icon>mdi-cash-multiple</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Debt</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to="/account">
+                <v-list-item-icon>
+                  <v-icon>mdi-account</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Account</v-list-item-title>
+              </v-list-item>
+
+            </v-list-item-group>
+          </v-list>
+        </v-navigation-drawer>
 
     <v-content>
       <HelloWorld/>
@@ -54,7 +77,13 @@ export default {
   },
 
   data: () => ({
-    //
+    drawer: false
   }),
 };
 </script>
+
+<style>
+  html {
+    overflow-y: auto;
+  }
+</style>
