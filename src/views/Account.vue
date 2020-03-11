@@ -1,5 +1,13 @@
 <template>
-  <div class="about">
-    <h1>This is an account page</h1>
-  </div>
+  <v-container>
+    <v-row class="text-center">
+      <v-col cols="12">
+        <v-card>
+            <v-card-title primary-title>
+                Account
+            </v-card-title>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
