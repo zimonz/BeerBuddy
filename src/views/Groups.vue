@@ -6,7 +6,7 @@
                 <v-card-actions>
                     <v-btn small color="secondary" @click="formVisible = !formVisible">
                         <v-icon>mdi-account-multiple</v-icon>
-                        Add Group
+                        New group
                     </v-btn>
                     <v-spacer></v-spacer>
                 </v-card-actions>
