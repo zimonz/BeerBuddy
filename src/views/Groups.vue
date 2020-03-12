@@ -31,6 +31,7 @@
 <script>
 import GroupForm from '../components/GroupForm'
 import GroupList from '../components/GroupList'
+
 export default {
     name: 'Groups',
     components: {

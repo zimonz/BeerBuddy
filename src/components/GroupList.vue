@@ -9,7 +9,14 @@
                     <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
                     <v-list-item-subtitle>
                         <v-chip-group>
-                            <v-chip v-for="participant in item.participants" :key="participant" :value="participant" color="secondary" small> {{ participant }} </v-chip>
+                            <v-chip 
+                                v-for="participant in item.participants" 
+                                :key="participant" 
+                                :value="participant" 
+                                color="secondary" 
+                                small>
+                                {{ participant }} 
+                            </v-chip>
                         </v-chip-group>
                     </v-list-item-subtitle>
                 </v-list-item-content>

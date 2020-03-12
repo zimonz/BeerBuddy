@@ -11,7 +11,18 @@
                             label="Group Name"   
                             reactive                         
                         ></v-text-field>                        
-                        <v-combobox v-model="participants" :items="dummyData" label="Participants" dense multiple chips reactive></v-combobox>
+                        <v-autocomplete 
+                            v-model="participants" 
+                            :items="dummyData" 
+                            label="Participants" 
+                            dense 
+                            multiple 
+                            chips 
+                            small-chips
+                            reactive
+                            :search-input.sync="searchInput"
+                            @change="searchInput=''">
+                        </v-autocomplete>
 
                         <v-btn @click="submit" color="green darken-3" :disabled="!valid" dark>
                             Create group
@@ -26,16 +37,21 @@
 
 <script>
 // import axios from "axios";
+import moment from "moment"
 
 export default {
     data: () => ({
         groupname: '',
         participants: [],
+        searchInput: '',
         valid: true
     }),
     computed: {
         dummyData() {
             return ['Max Müller', 'Daniel Meier'];
+        },
+        today() {
+            return moment(new Date()).format('YYYY-MM-DD');
         }
     },
     methods: {
@@ -48,7 +64,7 @@ export default {
                     select: this.select,
                     checkbox: this.checkbox
                 });*/
-                console.log(this.groupname + ' ' + this.participants);
+                console.log(this.groupname + ' ' + this.participants + ' ' + this.today);
             }
         }
     }

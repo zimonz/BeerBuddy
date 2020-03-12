@@ -1,117 +1,89 @@
 <template>
-    <v-container fluid>
-        <v-row class="text-center" align="center" justify="center">
-            <v-col cols="12" lg="6" md="8" sm="10" xs="12">
+<v-container fluid>
+    <template>
+        <v-form v-model="valid" ref="form" lazy-validation>
+            <v-card class="pa-4" flat>
+                <v-row justify="center">
+                    <v-col lg="6" md="6" sm="12">
+                        <v-date-picker label="Date" v-model="date" :landscape="false" :reactive="true" multiple class="ma-2">
+                        </v-date-picker>
+                    </v-col>
+                    <v-col lg="6" md="6" sm="10">
+                        <v-combobox v-model="date" multiple chips small-chips label="Dates" prepend-icon="mdi-calendar" readonly></v-combobox>
+                        <v-checkbox label="Whole day" v-model="wholeDay">
+                        </v-checkbox>
 
+                        <v-dialog v-if="!wholeDay" ref="timeFrom" v-model="modal1" :reactive="true" :return-value.sync="timeFrom" persistent width="290px">
+                            <template v-slot:activator="{ on }">
+                                <v-text-field v-model="timeFrom" label="From" prepend-icon="mdi-clock" :rules="timeFromRule" readonly required v-on="on"></v-text-field>
+                            </template>
+                            <v-time-picker v-if="modal1" format="24hr" v-model="timeFrom" full-width>
+                                <v-spacer></v-spacer>
+                                <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
+                                <v-btn text color="primary" @click="$refs.timeFrom.save(timeFrom)">OK</v-btn>
+                            </v-time-picker>
+                        </v-dialog>
 
+                        <v-dialog v-if="!wholeDay" ref="timeTo" v-model="modal2" :reactive="true" :return-value.sync="timeTo" persistent width="290px">
+                            <template v-slot:activator="{ on }">
+                                <v-text-field v-model="timeTo" label="To" prepend-icon="mdi-clock" :rules="timeToRule" readonly required v-on="on"></v-text-field>
+                            </template>
+                            <v-time-picker v-if="modal2" format="24hr" v-model="timeTo" full-width>
+                                <v-spacer></v-spacer>
+                                <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                                <v-btn text color="primary" @click="$refs.timeTo.save(timeTo)">OK</v-btn>
+                            </v-time-picker>
+                        </v-dialog>
+                        <v-select label="Availability" v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" required></v-select>
 
-            </v-col>
-            <v-col lg="8" md="10" sm="10" xs="12">
-
-                <template>
-                    <v-subheader>Event XYZ</v-subheader>
-                    <v-form v-model="valid" ref="form" lazy-validation>
-                        <v-row>
-                            <v-col lg="6" md="6" sm="10">
-                                <v-date-picker label="Date" v-model="date" :landscape="false" :reactive="true" multiple
-                                    class="ma-2">
-                                </v-date-picker>
-                            </v-col>
-                            
-                            <v-col lg="6" md="6" sm="10">
-                                <v-combobox
-                                v-model="date"
-                                multiple
-                                chips
-                                small-chips
-                                label="Dates"
-                                prepend-icon="mdi-calendar"
-                                readonly
-                            ></v-combobox>
-                                <v-checkbox label="Whole day" v-model="wholeDay">
-                                </v-checkbox>
-
-                                <v-dialog v-if="!wholeDay" ref="timeFrom" v-model="modal1" :reactive="true" :return-value.sync="timeFrom" persistent width="290px">
-                                    <template v-slot:activator="{ on }">
-                                        <v-text-field v-model="timeFrom" label="From" prepend-icon="mdi-clock" :rules="timeFromRule" readonly required
-                                            v-on="on"></v-text-field>
-                                    </template>
-                                    <v-time-picker v-if="modal1" format="24hr" v-model="timeFrom" full-width>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="modal1 = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.timeFrom.save(timeFrom)">OK</v-btn>
-                                    </v-time-picker>
-                                </v-dialog>
-                                
-                                <v-dialog v-if="!wholeDay" ref="timeTo" v-model="modal2" :reactive="true" :return-value.sync="timeTo" persistent width="290px">
-                                    <template v-slot:activator="{ on }">
-                                        <v-text-field v-model="timeTo" label="To" prepend-icon="mdi-clock" :rules="timeToRule" readonly required
-                                            v-on="on"></v-text-field>
-                                    </template>
-                                    <v-time-picker v-if="modal2" format="24hr" v-model="timeTo" full-width>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.timeTo.save(timeTo)">OK</v-btn>
-                                    </v-time-picker>
-                                </v-dialog>
-                                <v-select label="Availability" v-model="select" :items="items"
-                                    :rules="[v => !!v || 'Item is required']" required></v-select>
-
-                                <v-btn @click="submit" :disabled="!valid">
-                                    submit
-                                </v-btn>
-                                <v-btn @click="clear">clear</v-btn>
-                            </v-col>
-                        </v-row>
-
-
-                        
-                    </v-form>
-                </template>
-
-
-            </v-col>
-        </v-row>
-    </v-container>
-
+                        <v-btn @click="submit" class="green darken-3" :disabled="!valid" dark>
+                            submit
+                        </v-btn>
+                        <v-btn @click="clear">clear</v-btn>
+                    </v-col>
+                </v-row>
+            </v-card>
+        </v-form>
+    </template>
+</v-container>
 </template>
 
 <script>
-    // import axios from "axios";
+// import axios from "axios";
 
-    export default {
-        data: () => ({
-            valid: true,
-            date: [],
-            menu: false,
-            dateRules: '',
-            modal1: false,
-            modal2: false,
-            timeFrom: null,
-            timeFromRule: [ v => !!v || 'Time is required or select "Whole Day"' ],
-            timeTo: null,
-            timeToRule: [ v => !!v || 'Time is required or select "Whole Day"' ],
-            wholeDay: false,
-            select: null,
-            items: ["Absolutely not", "Probably not", "Maybe"]
-        }),
+export default {
+    data: () => ({
+        valid: true,
+        date: [],
+        menu: false,
+        dateRules: '',
+        modal1: false,
+        modal2: false,
+        timeFrom: null,
+        timeFromRule: [v => !!v || 'Time is required or select "Whole Day"'],
+        timeTo: null,
+        timeToRule: [v => !!v || 'Time is required or select "Whole Day"'],
+        wholeDay: false,
+        select: null,
+        items: ["Absolutely not", "Probably not", "Maybe"]
+    }),
 
-        methods: {
-            submit() {
-                if (this.$refs.form.validate()) {
-                    // Native form submission is not yet supported
-                    /*axios.post("/api/submit", {
-                        name: this.name,
-                        email: this.email,
-                        select: this.select,
-                        checkbox: this.checkbox
-                    });*/
-                    console.log(this.$refs.form);
-                }
-            },
-            clear() {
-                this.$refs.form.reset();
+    methods: {
+        submit() {
+            if (this.$refs.form.validate()) {
+                // Native form submission is not yet supported
+                /*axios.post("/api/submit", {
+                    name: this.name,
+                    email: this.email,
+                    select: this.select,
+                    checkbox: this.checkbox
+                });*/
+                console.log(this.$refs.form);
             }
+        },
+        clear() {
+            this.$refs.form.reset();
         }
-    };
+    }
+};
 </script>
