@@ -54,7 +54,8 @@ export default {
     }),
     methods: {
         dummy: function () {
-            console.log('list clicked');
+            // console.log('list clicked');
+            return 0;
         }
     }
 }

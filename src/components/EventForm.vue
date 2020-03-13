@@ -78,7 +78,8 @@ export default {
                     select: this.select,
                     checkbox: this.checkbox
                 });*/
-                console.log(this.$refs.form);
+                // console.log(this.$refs.form);
+                return 0;
             }
         },
         clear() {

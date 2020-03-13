@@ -64,7 +64,8 @@ export default {
                     select: this.select,
                     checkbox: this.checkbox
                 });*/
-                console.log(this.groupname + ' ' + this.participants + ' ' + this.today);
+                // console.log(this.groupname + ' ' + this.participants + ' ' + this.today);
+                return 0;
             }
         }
     }
