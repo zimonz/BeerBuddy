@@ -4,20 +4,10 @@
       <v-col cols="12">
         <v-card>
             <v-card-title primary-title>
-                Dashboard
+                Debts
             </v-card-title>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
-
-<script>
-
-export default {
-  name: 'Home',
-  components: {
-    
-  }
-}
-</script>
