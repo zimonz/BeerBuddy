@@ -26,12 +26,12 @@
 export default {
     data: () => ({
         items: [{
-                title: 'Fyrabigbier',
+                title: 'Klassetreff',
                 group: 'BIA12b',
                 date: ['2020-01-12', '2020-01-16']
             }, {
-                title: 'Suufe nach de Prüefige',
-                group: 'IT18ta_ZH',
+                title: 'Fyrabigbier',
+                group: 'IT1ab_ZH',
                 date: ['2020-03-15', '2020-03-20']
             },
         ]
