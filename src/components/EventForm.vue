@@ -37,7 +37,6 @@
                 <v-btn @click="submit" class="green darken-3" :disabled="!valid" dark>
                     submit
                 </v-btn>
-                <v-btn @click="clear">clear</v-btn>
             </v-col>
         </v-row>
     </v-container>
@@ -77,9 +76,6 @@ export default {
                 // console.log(this.$refs.form);
                 return 0;
             }
-        },
-        clear() {
-            this.$refs.form.reset();
         }
     }
 };

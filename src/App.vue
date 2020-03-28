@@ -28,6 +28,8 @@
 </template>
 
 <script>
+// import axios from 'axios'
+
 export default {
     name: 'App',
     data: () => ({
@@ -54,6 +56,9 @@ export default {
             'title': 'Account'
         }]
     }),
+    mounted() {
+        
+    }
 };
 </script>
 
