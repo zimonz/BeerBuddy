@@ -1,7 +1,7 @@
 <template>
 <v-container fluid>
     <v-row justify="center">
-        <v-col lg="8" md="10" sm="10" xs="12">
+        <v-col cols="12" lg="8" md="10" sm="10" xs="12">
             <v-card flat>
                 <v-card-actions>
                     <v-btn small color="secondary" @click="formVisible = !formVisible">

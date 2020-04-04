@@ -29,6 +29,12 @@ const routes = [
     path: '/groups',
     name: 'Groups',
     component: () => import(/* webpackChunkName: "about" */ '../views/Groups.vue')
+  },
+  {
+    path: '/groups/:groupId',
+    name: 'groupEvents',
+    props: true,
+    component: () => import(/* webpackChunkName: "about" */ '../views/Events.vue')
   }
 ]
 

@@ -21,7 +21,7 @@
                 <v-card-title primary-title>
                     Events
                 </v-card-title>
-                <EventList />
+                <EventList v-bind:groupId="group" reactive/>
             </v-card>
         </v-col>
     </v-row>
@@ -30,17 +30,25 @@
 
 <script>
 // @ is an alias to /src
+// import $ from "jquery";
 import EventForm from '../components/EventForm.vue'
 import EventList from '../components/EventList.vue'
 
 export default {
-    name: 'Home',
+    name: 'Events',
+    props: ['groupId'],
     data: () => ({
-        formVisible: false
+        formVisible: false,
+        group: null
     }),
     components: {
         EventForm,
         EventList
+    },
+    created() {
+        if(this.groupId) {
+            this.group = this.groupId;
+        }
     }
 }
 </script>

@@ -6,6 +6,7 @@
           <v-col lg="12" md="12" sm="12">
             <v-card class="pa-4" tile>
               <v-text-field v-model="groupname" name="groupname" label="Group Name" reactive></v-text-field>
+              <v-text-field v-model="description" name="description" label="Group Description" reactive></v-text-field>
               <v-autocomplete
                 v-model="participants"
                 :disabled="isUpdating"
@@ -35,10 +36,12 @@
 <script>
 import $ from 'jquery'
 import moment from "moment";
+import {apiUrl} from '../assets/globals';
 
 export default {
   data: () => ({
     groupname: "",
+    description: "",
     participants: [],
     allUsers: [],
     isUpdating: true,
@@ -56,12 +59,29 @@ export default {
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
+          let admin = this.participants[0];
+          let nonAdmin = this.participants.slice();
+          nonAdmin.shift();
+          let formData = JSON.stringify( { 'admins': [ admin ],'description': this.description, 'name': this.groupname, 'participants': nonAdmin } );
+          
+          $.ajax({
+            type: "POST",
+            url: apiUrl + "/api/v1/group",
+            data: formData,
+            success: () => { 
+                      $.get( apiUrl + "/api/v1/group")
+                        .done(res => { console.log(res)});
+                      this.$refs.form.reset();
+                    },
+            dataType: "text",
+            contentType : "application/json"
+        });
         return 0;
       }
     }
   },
   created() {
-    $.get( "http://192.168.0.157:8080/api/v1/user")
+    $.get( "http://localhost:8080/api/v1/user")
                     .done(response => {
                         this.allUsers = response;
                     })
