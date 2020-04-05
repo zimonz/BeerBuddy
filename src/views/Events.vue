@@ -11,7 +11,7 @@
                     <v-spacer></v-spacer>
                 </v-card-actions>
                 <v-expand-transition>
-                    <EventForm v-show="formVisible" />
+                    <EventForm v-show="formVisible" v-bind:groupId="groupId" @update="$forceUpdate();" />
                 </v-expand-transition>
             </v-card>
                 <v-divider inset></v-divider>
