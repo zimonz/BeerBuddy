@@ -21,6 +21,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Events.vue')
   },
   {
+    path: '/group/:groupId/events/:eventId',
+    name: 'eventPage',
+    props: true,
+    component: () => import(/* webpackChunkName: "about" */ '../views/EventPage.vue')
+  },
+  {
     path: '/account',
     name: 'Account',
     component: () => import(/* webpackChunkName: "about" */ '../views/Account.vue')
@@ -31,10 +37,15 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Groups.vue')
   },
   {
-    path: '/groups/:groupId',
+    path: '/group/:groupId',
     name: 'groupEvents',
     props: true,
     component: () => import(/* webpackChunkName: "about" */ '../views/Events.vue')
+  },
+  {
+    path: '/participant',
+    name: 'participant',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Participant.vue')
   }
 ]
 

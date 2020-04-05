@@ -28,7 +28,8 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import $ from'jquery';
+import { apiUrl } from "./assets/globals";
 
 export default {
     name: 'App',
@@ -51,13 +52,43 @@ export default {
             'icon': 'mdi-cash-refund',
             'title': 'Debts'
         }, {
-            'routeto': '/account',
+            'routeto': '/participant',
             'icon': 'mdi-account',
             'title': 'Account'
-        }]
+        }],
+        appMap: new Map()
     }),
+    methods: {
+        pullData() {
+            $.get(apiUrl + "/api/v1/group").done(allGroups => {
+                allGroups.forEach(group => {
+                    if( this.appMap.get(group.id) == null ) {
+                        group.events = new Map();
+                        this.appMap.set(group.id, group);
+                        this.appMapToStorage();
+                    }
+                    $.get(apiUrl + "/api/v1/group/" + group.id + '/events/').done(allEvents => { 
+                        allEvents.forEach(event => {
+                            if(this.appMap.get(group.id).events.get(event.id) == null) {
+                                this.appMap.get(group.id).events.set(event.id, event);
+                                this.appMapToStorage();
+                            }
+                        });
+                    });
+                        
+                });
+            });
+        },
+        appMapToStorage() {
+            localStorage.setItem('BeerBuddyMap',  JSON.stringify(Array.from(this.appMap.entries())));
+        },
+        storageToAppMap() {
+            this.appMap = new Map(JSON.parse(localStorage.BeerBuddyMap));
+        }
+    },
     mounted() {
-        
+        this.pullData();
+        setInterval(this.pullData, 5000);
     }
 };
 </script>
