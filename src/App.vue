@@ -5,13 +5,17 @@
             <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
             <v-toolbar-title>BeerBuddy</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn v-for="route in routesBar" :key="route.routeto" :to="route.routeto" icon>
+                <v-icon>{{ route.icon }}</v-icon>
+            </v-btn>
         </v-app-bar>
     </v-card>
 
     <v-navigation-drawer v-model="drawer" absolute temporary>
         <v-list nav dense>
             <v-list-item-group active-class="deep-purple--text text--accent-4">
-                <v-list-item v-for="route in routes" :key="route.routeto" :to="route.routeto">
+                <v-list-item v-for="route in routesDrawer" :key="route.routeto" :to="route.routeto">
                     <v-list-item-icon>
                         <v-icon>{{ route.icon }}</v-icon>
                     </v-list-item-icon>
@@ -28,14 +32,16 @@
 </template>
 
 <script>
-import $ from'jquery';
-import { apiUrl } from "./assets/globals";
+import $ from 'jquery';
+import {
+    apiUrl
+} from "./assets/globals";
 
 export default {
     name: 'App',
     data: () => ({
         drawer: false,
-        routes: [{
+        routesDrawer: [{
             'routeto': '/',
             'icon': 'mdi-home',
             'title': 'Dashboard'
@@ -44,14 +50,11 @@ export default {
             'icon': 'mdi-account-group',
             'title': 'Your groups'
         }, {
-            'routeto': '/events',
-            'icon': 'mdi-calendar-multiple',
-            'title': 'Your events'
-        }, {
             'routeto': '/debts',
             'icon': 'mdi-cash-refund',
             'title': 'Debts'
-        }, {
+        }],
+        routesBar: [{
             'routeto': '/participant',
             'icon': 'mdi-account',
             'title': 'Account'
@@ -62,25 +65,25 @@ export default {
         pullData() {
             $.get(apiUrl + "/api/v1/group").done(allGroups => {
                 allGroups.forEach(group => {
-                    if( this.appMap.get(group.id) == null ) {
+                    if (this.appMap.get(group.id) == null) {
                         group.events = new Map();
                         this.appMap.set(group.id, group);
                         this.appMapToStorage();
                     }
-                    $.get(apiUrl + "/api/v1/group/" + group.id + '/events/').done(allEvents => { 
+                    $.get(apiUrl + "/api/v1/group/" + group.id + '/events/').done(allEvents => {
                         allEvents.forEach(event => {
-                            if(this.appMap.get(group.id).events.get(event.id) == null) {
+                            if (this.appMap.get(group.id).events.get(event.id) == null) {
                                 this.appMap.get(group.id).events.set(event.id, event);
                                 this.appMapToStorage();
                             }
                         });
                     });
-                        
+
                 });
             });
         },
         appMapToStorage() {
-            localStorage.setItem('BeerBuddyMap',  JSON.stringify(Array.from(this.appMap.entries())));
+            localStorage.setItem('BeerBuddyMap', JSON.stringify(Array.from(this.appMap.entries())));
         },
         storageToAppMap() {
             this.appMap = new Map(JSON.parse(localStorage.BeerBuddyMap));
