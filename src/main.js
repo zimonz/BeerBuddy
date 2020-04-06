@@ -10,11 +10,11 @@ Vue.config.productionTip = false
 // Mixins
 Vue.mixin({
   methods: {
-      userId: () => {
-          return JSON.parse(localStorage.getItem('user')).id;
+      userId: () => {        
+          return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : '';
       },
       userEmail: () => {
-          return JSON.parse(localStorage.getItem('user')).email;
+          return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).email : '';
       }
   }
 })
