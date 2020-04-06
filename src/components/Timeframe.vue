@@ -4,9 +4,6 @@
         <v-col class="pa-2 text-left">
             <v-form>
                 <br />
-                <v-spacer></v-spacer>
-                <v-autocomplete v-model="participant" :disabled="isUpdating" :items="allUsers" item-text="name" item-value="id" label="Participants" dense reactive :search-input.sync="searchInput" @change="searchInput=''"></v-autocomplete>
-                <br />
                 <span class="d-block text-center display-1 font-weight-light mt-2" v-text="formatDateTime(item.slots[range[0]].fromTime) + ' - ' + formatDateTime(item.slots[range[1]].toTime)"></span>
                 <v-divider></v-divider>
                 <br />
@@ -36,9 +33,7 @@ export default {
     props: ["headers", "item", "groupId", "eventId"],
     data: () => ({
         searchInput: "",
-        range: [0, 1],
-        participant: null,
-        allUsers: null
+        range: [0, 1]
     }),
     components: {},
     methods: {
@@ -55,16 +50,12 @@ export default {
             return this.formatTime(i.fromTime) + ' ' + this.formatTime(i.toTime);
         },
         submit() {
-            console.log(this.item.slots[this.range[0]]);
-            console.log('RANGE_TO: ' + this.item.slots[this.range[1]]);
-            console.log('UserId: ' + this.participant);
-
-            var formData = JSON.stringify( {
+            var formData = JSON.stringify({
                 "endSlotId": this.item.slots[this.range[1]].id,
                 "startSlotId": this.item.slots[this.range[0]].id,
                 "timeframeId": this.timeframeId,
-                "userId": this.participant
-            } );
+                "userId": this.userId()
+            });
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
@@ -74,14 +65,40 @@ export default {
                     console.log(res);
                 }
             });
+        },
+        getArrayIndexForKey(arr, key, val) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i][key] == val)
+                    return i;
+            }
+            return -1;
         }
     },
     created() {
-        $.get(apiUrl + "/api/v1/user")
-            .done(response => {
-                this.allUsers = response;
-            })
-            .always(this.isUpdating = false);
+        $.get(apiUrl + '/api/v1/group/' + this.groupId + '/events/' + this.eventId + '/timeframe')
+            .done(res => {
+                var tf, slots;
+                tf = $.grep(res, (n) => {
+                    return n.id == this.item.id;
+                })[0];
+                slots = $.grep(tf.slots, (n) => {
+                    var interests = null;
+                    if (n.interests.length > 0)
+                        interests = $.grep(n.interests, (x) => {
+                            return x.id == this.userId();
+                        })[0];
+
+                    return interests && interests.id == this.userId()
+                });
+                if(slots[0]) {
+                    var startIndex = this.getArrayIndexForKey(tf.slots, "id", slots[0].id);
+                    var endIndex = this.getArrayIndexForKey(tf.slots, "id", slots[ slots.length-1 ].id);
+                    this.range = [startIndex, endIndex];
+                }
+                else {
+                    this.range = [0,1];
+                }
+            });
     }
 };
 </script>

@@ -2,9 +2,7 @@
   <v-container fluid>
     <v-row justify="center">
       <v-col cols="12" lg="8" md="10" sm="10" xs="12">
-        <v-card flat>
           <ParticipantForm />
-        </v-card>
       </v-col>
     </v-row>
   </v-container>

@@ -6,9 +6,14 @@
 
             <v-toolbar-title>BeerBuddy</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn v-for="route in routesBar" :key="route.routeto" :to="route.routeto" icon>
-                <v-icon>{{ route.icon }}</v-icon>
-            </v-btn>
+            <v-tooltip bottom>
+                <template v-slot:activator="{ on }">
+                    <v-btn v-for="route in routesBar" :key="route.routeto" :to="route.routeto" v-on="on" icon>
+                    <v-icon>{{ route.icon }}</v-icon>
+                    </v-btn>
+                </template>
+                <span>{{ retUsermail() }}</span>
+            </v-tooltip>
         </v-app-bar>
     </v-card>
 
@@ -87,6 +92,9 @@ export default {
         },
         storageToAppMap() {
             this.appMap = new Map(JSON.parse(localStorage.BeerBuddyMap));
+        },
+        retUsermail() {
+            return this.userEmail();
         }
     },
     mounted() {
