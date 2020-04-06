@@ -90,8 +90,8 @@ export default {
         }
     },
     mounted() {
-        this.pullData();
-        setInterval(this.pullData, 5000);
+        // this.pullData();
+        // setInterval(this.pullData, 5000);
     }
 };
 </script>

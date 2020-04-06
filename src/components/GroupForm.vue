@@ -81,7 +81,7 @@ export default {
     }
   },
   created() {
-    $.get( "http://localhost:8080/api/v1/user")
+    $.get( apiUrl + "/api/v1/user")
                     .done(response => {
                         this.allUsers = response;
                     })
