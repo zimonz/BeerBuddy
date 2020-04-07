@@ -22,6 +22,13 @@
                             </template>
                         </v-col>
                     </v-row>
+                    <v-row>
+                        <v-col cols="12">
+                            <template>
+                                <TimeframeRanking v-bind:headers="headers" v-bind:groupId="groupId" v-bind:eventId="eventId" v-bind:selectedTimeFrame="this.selectedTimeFrame" />
+                            </template>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
             </v-card>
         </v-col>
@@ -37,6 +44,7 @@ import {
 import moment from "moment";
 
 import TimeFrame from '../components/Timeframe';
+import TimeframeRanking from '../components/TimeframeRanking';
 
 export default {
     name: "Event",
@@ -44,6 +52,7 @@ export default {
     data: () => ({
         expanded: [],
         singleExpand: true,
+        selectedTimeFrame: null,
         title: null,
         timeFrames: null,
         timeFramesTable: [],
@@ -72,7 +81,7 @@ export default {
         ],
     }),
     components: {
-        TimeFrame
+        TimeFrame,TimeframeRanking
     },
     methods: {
         formatDate(ISOTime) {
@@ -97,8 +106,10 @@ export default {
         $.get(
             apiUrl + "/api/v1/group/" + this.groupId + "/events/" + this.eventId
         ).done(res => {
+            console.log(res);
             this.title = res.name;
             this.timeFrames = res.timeFrames;
+            this.selectedTimeFrame = res.selectedTimeFrame;
             this.timeFrames.forEach(element => {
                 this.timeFramesTable.push({
                     "id": element.id,
