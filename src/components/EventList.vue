@@ -2,7 +2,8 @@
   <v-container fluid>
     <v-list three-line subheader>
       <template v-for="item in events" reactive>
-            <v-list-item :key="item.id" @click="dummy" :to="{ name: 'eventPage', params: { groupId: group, eventId: item.id} }">
+          <div :key="item.id">
+            <v-list-item @click="dummy" :to="{ name: 'eventPage', params: { groupId: group, eventId: item.id} }">
               <v-list-item-content>
                 <v-list-item-title v-text="item.title"></v-list-item-title>
                 <v-list-item-subtitle>
@@ -20,7 +21,8 @@
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-            <v-divider :key="item.id"></v-divider>
+            <v-divider></v-divider>
+          </div>
       </template>
     </v-list>
   </v-container>
