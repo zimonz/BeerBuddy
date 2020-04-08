@@ -14,8 +14,8 @@
                 </v-range-slider>
                 <br />
                 <v-spacer></v-spacer>
-                <v-btn depressed small class="white--text" :loading="loading" :disabled="loading" :color="btnColor" @click="submit">      
-                    {{ btnLabel }}              
+                <v-btn depressed small class="white--text" :loading="loading" :disabled="loading" :color="btnColor" @click="submit">
+                    {{ btnLabel }}
                     <v-icon right>
                         {{ btnIcon }}
                     </v-icon>
@@ -84,15 +84,50 @@ export default {
                     this.btnColor = 'green darken-2';
                     this.btnLabel = 'Changes saved';
                     this.btnIcon = 'mdi-check-circle';
-                    }
-            });           
-            
+                }
+            });
+
         },
         getArrayIndexForKey(arr, key, val) {
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i][key] == val) return i;
             }
             return -1;
+        },
+        setRange() {
+            $.get(
+                apiUrl +
+                "/api/v1/group/" +
+                this.groupId +
+                "/events/" +
+                this.eventId +
+                "/timeframe"
+            ).done(res => {
+                var tf, slots;
+                tf = $.grep(res, n => {
+                    return n.id == this.item.id;
+                })[0];
+                slots = $.grep(tf.slots, n => {
+                    var interests = null;
+                    if (n.interests.length > 0)
+                        interests = $.grep(n.interests, x => {
+                            return x.id == this.userId();
+                        })[0];
+
+                    return interests && interests.id == this.userId();
+                });
+                if (slots[0]) {
+                    var startIndex = this.getArrayIndexForKey(tf.slots, "id", slots[0].id);
+                    var endIndex = this.getArrayIndexForKey(
+                        tf.slots,
+                        "id",
+                        slots[slots.length - 1].id
+                    );
+                    this.range = [startIndex, endIndex];
+                } else {
+                    this.range = [0, 1];
+                }
+            });
         }
     },
     watch: {
@@ -103,42 +138,13 @@ export default {
             setTimeout(() => (this[l] = false), 3000);
 
             this.loader = null;
+        },
+        item() {
+            this.setRange();
         }
     },
     created() {
-        $.get(
-            apiUrl +
-            "/api/v1/group/" +
-            this.groupId +
-            "/events/" +
-            this.eventId +
-            "/timeframe"
-        ).done(res => {
-            var tf, slots;
-            tf = $.grep(res, n => {
-                return n.id == this.item.id;
-            })[0];
-            slots = $.grep(tf.slots, n => {
-                var interests = null;
-                if (n.interests.length > 0)
-                    interests = $.grep(n.interests, x => {
-                        return x.id == this.userId();
-                    })[0];
-
-                return interests && interests.id == this.userId();
-            });
-            if (slots[0]) {
-                var startIndex = this.getArrayIndexForKey(tf.slots, "id", slots[0].id);
-                var endIndex = this.getArrayIndexForKey(
-                    tf.slots,
-                    "id",
-                    slots[slots.length - 1].id
-                );
-                this.range = [startIndex, endIndex];
-            } else {
-                this.range = [0, 1];
-            }
-        });
+        this.setRange();
     }
 };
 </script>

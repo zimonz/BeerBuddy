@@ -13,7 +13,7 @@
                     v-for="participant in item.assignements"
                     :key="(participant.name, participant.participantId)"
                     :value="participant.participantId"
-                    color="secondary"
+                    :color="chipColor(participant)"
                     small
                   >
                     <v-icon v-if="!participant.name" class="rotate360">mdi-loading</v-icon>
@@ -48,6 +48,7 @@ export default {
   methods: {
     populateUI: function() {
       this.items.forEach(item => {
+        item.assignements.sort((a,b) => { return b.admin - a.admin });
         item.assignements.forEach(participant => {
           if (this.userMap.get(participant.participantId) == null)
             $.get(apiUrl + "/api/v1/user/" + participant.participantId).done(
@@ -71,6 +72,10 @@ export default {
     chipUsername: function(id) {
       let user = this.userMap.get(id);
       return user == null ? "<v-icon>mdi-account</v-icon>" : user;
+    },
+    chipColor(val) {
+      if(val.admin) return 'primary';
+      else return 'secondary';
     },
     doNothing() {
       return 0;

@@ -14,6 +14,7 @@
                 </template>
                 <span>{{ retUsermail() }}</span>
             </v-tooltip>
+            <v-btn v-if="userId()" @click="logout" icon><v-icon>mdi-logout</v-icon></v-btn>
         </v-app-bar>
     </v-card>
 
@@ -95,6 +96,10 @@ export default {
         },
         retUsermail() {
             return this.userEmail();
+        },
+        logout() {
+            localStorage.removeItem('user');
+            this.$router.go('/');
         }
     },
     mounted() {
