@@ -59,8 +59,8 @@ export default {
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
-          let admin = this.participants[0];
-          let nonAdmin = this.participants.slice();
+          let admin = this.userId();
+          let nonAdmin = this.participants;
           nonAdmin.shift();
           let formData = JSON.stringify( { 'admins': [ admin ],'description': this.description, 'name': this.groupname, 'participants': nonAdmin } );
           
@@ -84,6 +84,10 @@ export default {
     $.get( apiUrl + "/api/v1/user")
                     .done(response => {
                         this.allUsers = response;
+                        this.allUsers = this.allUsers.filter((usr) => {
+                          return usr.id != this.userId();
+                        });
+                        console.log(this.allUsers);
                     })
                     .always( this.isUpdating = false );
   }

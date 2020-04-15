@@ -6,7 +6,7 @@
 
             <v-toolbar-title>BeerBuddy</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-tooltip bottom>
+            <v-tooltip v-if="retUsermail()" bottom>
                 <template v-slot:activator="{ on }">
                     <v-btn v-for="route in routesBar" :key="route.routeto" :to="route.routeto" v-on="on" icon>
                     <v-icon>{{ route.icon }}</v-icon>
