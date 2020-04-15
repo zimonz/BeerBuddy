@@ -7,8 +7,15 @@ import vuetify from './plugins/vuetify'
 
 Vue.config.productionTip = false
 
+const eventHub = new Vue() // Single event hub
+
 // Mixins
-Vue.mixin({
+Vue.mixin({  
+  data: function () {
+    return {
+        eventHub: eventHub
+    }
+},
   methods: {
       userId: () => {        
           return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).id : '';

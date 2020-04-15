@@ -72,6 +72,11 @@ export default {
       this.group = this.groupId;
     }
     this.getEventsByGroupId();
+    
+    this.eventHub.$on('updateEvents', () => {
+      this.events = [];
+      this.getEventsByGroupId();
+    });
   }
 };
 </script>

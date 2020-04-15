@@ -83,6 +83,9 @@ export default {
   },
   created() {
       this.getGroups();
+      this.eventHub.$on('updateGroups', () => {
+        this.getGroups();
+      });
   }
 };
 </script>

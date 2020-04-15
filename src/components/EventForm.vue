@@ -159,9 +159,9 @@ export default {
                         success: () => { 
                             this.eventname = '';
                             this.timeframes = [];
-                            this.$emit('update', null);
                         }
                     });
+                    this.eventHub.$emit('updateEvents');
                 }
             });
             return 0;
