@@ -10,14 +10,14 @@
               <template>
                 <v-chip-group :key="componentKey">
                   <v-chip
-                    v-for="participant in item.assignements"
-                    :key="(participant.name, participant.participantId)"
-                    :value="participant.participantId"
-                    :color="chipColor(participant)"
+                    v-for="assignement in item.assignements"
+                    :key="(assignement.participant.name, assignement.participant.id)"
+                    :value="assignement.participant.id"
+                    :color="chipColor(assignement)"
                     small
                   >
-                    <v-icon v-if="!participant.name" class="rotate360">mdi-loading</v-icon>
-                    <div v-else>{{ participant.name }}</div>
+                    <v-icon v-if="!assignement.participant.name" class="rotate360">mdi-loading</v-icon>
+                    <div v-else>{{ assignement.participant.name }}</div>
                   </v-chip>
                 </v-chip-group>
               </template>
@@ -49,11 +49,11 @@ export default {
     populateUI: function() {
       this.items.forEach(item => {
         item.assignements.sort((a,b) => { return b.admin - a.admin });
-        item.assignements.forEach(participant => {
-          if (this.userMap.get(participant.participantId) == null)
-            $.get(apiUrl + "/api/v1/user/" + participant.participantId).done(
+        item.assignements.forEach(assignement => {
+          if (this.userMap.get(assignement.participant.id) == null)
+            $.get(apiUrl + "/api/v1/user/" + assignement.participant.id).done(
               res => {
-                participant.name = res.name;
+                assignement.participant.name = res.name;
                 this.forceUpdate();
               }
             );
