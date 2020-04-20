@@ -76,9 +76,6 @@ export default {
     chipColor(val) {
       if(val.admin) return 'primary';
       else return 'secondary';
-    },
-    doNothing() {
-      return 0;
     }
   },
   created() {

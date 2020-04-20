@@ -7,7 +7,7 @@
                 <v-divider></v-divider>
                 <v-card-text>
                     <v-row>
-                        <v-col cols="12">
+                        <v-col v-if="!selectedTimeFrame" cols="12">
                             <template>
                                 <v-data-table :headers="headers" :items="timeFramesTable" :single-expand="singleExpand" :expanded.sync="expanded" item-key="id" @click:row="expandRow" class="elevation-1">
                                     <template v-slot:top>
@@ -21,12 +21,22 @@
                                 </v-data-table>
                             </template>
                         </v-col>
-                    </v-row>
-                    <v-row>
                         <v-col cols="12">
                             <template>
-                                <TimeframeRanking v-bind:headers="headers" v-bind:groupId="groupId" v-bind:eventId="eventId" v-bind:selectedTimeFrame="this.selectedTimeFrame" />
+                                <TimeframeRanking v-bind:groupId="groupId" v-bind:eventId="eventId" v-bind:selectedTimeFrame="this.selectedTimeFrame" />
                             </template>
+                            <v-divider></v-divider>
+                        </v-col>
+                        <v-col cols="12">
+                            <template>
+                                <ExpensesForm v-bind:groupId="groupId" v-bind:eventId="eventId" />
+                            </template>
+                        </v-col>
+                        <v-col cols="12">
+                            <SettlementList v-if="settlement" v-bind:settlementEntries="settlement" reactive/>
+                        </v-col>
+                        <v-col cols="12">
+                            <ExpensesList v-bind:groupId="groupId" v-bind:eventId="eventId" />
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -45,12 +55,16 @@ import moment from "moment";
 
 import TimeFrame from '../components/Timeframe';
 import TimeframeRanking from '../components/TimeframeRanking';
+import ExpensesForm from '../components/ExpensesForm';
+import ExpensesList from '../components/ExpensesList';
+import SettlementList from '../components/SettlementList';
 
 export default {
     name: "Event",
     props: ["groupId", "eventId"],
     data: () => ({
         expanded: [],
+        settlement: null,
         singleExpand: true,
         selectedTimeFrame: null,
         title: null,
@@ -81,7 +95,7 @@ export default {
         ],
     }),
     components: {
-        TimeFrame,TimeframeRanking
+        TimeFrame,TimeframeRanking, ExpensesForm, ExpensesList, SettlementList
     },
     methods: {
         formatDate(ISOTime) {
@@ -106,7 +120,7 @@ export default {
         $.get(
             apiUrl + "/api/v1/group/" + this.groupId + "/events/" + this.eventId
         ).done(res => {
-            console.log(res);
+            this.settlement = res.settlement.settlementEntries;
             this.title = res.name;
             this.timeFrames = res.timeFrames;
             this.selectedTimeFrame = res.selectedTimeFrame;
