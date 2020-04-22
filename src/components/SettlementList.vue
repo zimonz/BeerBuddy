@@ -23,35 +23,19 @@
 </template>
 
 <script>
-import $ from "jquery";
-import {
-    apiUrl
-} from "../assets/globals";
-
 export default {
     props: ['settlementEntries'],
     data: () => ({
         items: []
     }),
     methods: {
-        getSettlement() {
-            console.log(this.settlementEntries);
-            this.settlementEntries.forEach(element => {
-                $.get(apiUrl + "/api/v1/user/" + element.fromParticipantId).done(fromParticipant => {
-                    $.get(apiUrl + "/api/v1/user/" + element.toParticipantId).done(toParticipant => {
-                        element.fromParticipantName = fromParticipant.name;
-                        element.toParticipantName = toParticipant.name;
-                        this.items.push(element);
-                        console.log(element);
-                    });
-                });
-
-            });
-
-        }
     },
     created() {
-        this.getSettlement();
+        this.settlementEntries.forEach(settlement => {
+                settlement.fromParticipantName = settlement.fromParticipant.name;
+                settlement.toParticipantName = settlement.toParticipant.name;
+                this.items.push(settlement);
+            });
     }
 };
 </script>
