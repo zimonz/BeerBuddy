@@ -9,12 +9,6 @@
                     <v-list-item-subtitle v-text="'From ' + item.fromParticipantName"></v-list-item-subtitle>
                     <v-list-item-subtitle v-text="'To ' + item.toParticipantName"></v-list-item-subtitle>
                 </v-list-item-content>
-
-                <v-list-item-action>
-                    <v-btn icon>
-                        <v-icon color="grey lighten-1">mdi-information</v-icon>
-                    </v-btn>
-                </v-list-item-action>
             </v-list-item>
         </template>
     </v-list>

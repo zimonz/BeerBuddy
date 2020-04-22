@@ -27,18 +27,20 @@
                         </v-col>
                         <v-col cols="12">
                             <template>
-                                <TimeframeRanking v-bind:groupId="groupId" v-bind:eventId="eventId" v-bind:selectedTimeFrame="this.selectedTimeFrame" />
+                                <TimeframeRanking v-bind:title="title" v-bind:groupId="groupId" v-bind:eventId="eventId" v-bind:selectedTimeFrame="this.selectedTimeFrame" />
                             </template>
                         </v-col>
+                        
                         <v-col cols="12">
+                            <SettlementList v-if="settlement" v-bind:settlementEntries="settlement" reactive />
+                        </v-col>
+
+                        <v-col cols="4"  sm="12" md="4" lg="2">
                             <template>
                                 <ExpensesForm v-if="!settlement" v-bind:groupId="groupId" v-bind:eventId="eventId" />
                             </template>
                         </v-col>
-                        <v-col cols="12">
-                            <SettlementList v-if="settlement" v-bind:settlementEntries="settlement" reactive />
-                        </v-col>
-                        <v-col cols="12">
+                        <v-col cols="8" sm="12" md="8" lg="10">
                             <ExpensesList v-bind:groupId="groupId" v-bind:eventId="eventId" />
                         </v-col>
                     </v-row>

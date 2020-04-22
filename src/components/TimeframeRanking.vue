@@ -1,29 +1,27 @@
 <template>
-             <v-card flat>
-                    <v-card-title primary-title>
-                        Select definitely timeframe
-                    </v-card-title>
-                    <v-list three-line subheader>
-                        <template v-for="ranking in rankings">
-                            <v-list-item :key="ranking.originalTimeframe.id">
-                                <v-list-item-content>
-                                    <v-list-item-title v-text="formatDateTime(ranking.from) + ' - ' + formatDateTime(ranking.to)">
-                                    </v-list-item-title>
-                                    <v-list-item-subtitle v-text="'Number of participants ' + ranking.numberOfParticipants"></v-list-item-subtitle>
-                                    <v-list-item-subtitle v-text="'Average time per participant ' + ranking.avgTimePerParticipant"></v-list-item-subtitle>
-                                </v-list-item-content>
-                                <v-list-item-action>
-                                    <v-btn v-if="selectedTimeFrame == null" @click="setSelectedTimeframe(ranking.originalTimeframe.id)" icon>
-                                        select<v-icon color="grey lighten-1">mdi-crown</v-icon>
-                                    </v-btn>
-                                    <v-btn v-if="selectedTimeFrame != null  && ranking.originalTimeframe.id == selectedTimeFrame.id" icon>
-                                        <v-icon color="grey lighten-1">mdi-crown</v-icon>
-                                    </v-btn>
-                                </v-list-item-action>
-                            </v-list-item>
-                        </template>
-                    </v-list>
-                </v-card>
+<v-container v-if="rankings.length > 0" fluid>
+    <v-list three-line subheader>
+        <v-subheader class="headline">Choose timeframe</v-subheader>
+        <template v-for="ranking in rankings">
+            <v-list-item :key="ranking.originalTimeframe.id">
+                <v-list-item-content>
+                    <v-list-item-title v-text="formatDateTime(ranking.from) + ' - ' + formatDateTime(ranking.to)">
+                    </v-list-item-title>
+                    <v-list-item-subtitle v-text="'Number of participants ' + ranking.numberOfParticipants"></v-list-item-subtitle>
+                    <v-list-item-subtitle v-text="'Average time per participant ' + ranking.avgTimePerParticipant"></v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
+                    <v-btn v-if="selectedTimeFrame == null" @click="setSelectedTimeframe(ranking.originalTimeframe.id)" icon>
+                        select<v-icon color="grey lighten-1">mdi-crown</v-icon>
+                    </v-btn>
+                    <v-btn v-if="selectedTimeFrame != null  && ranking.originalTimeframe.id == selectedTimeFrame.id" @click="downloadCal(ranking.from, ranking.to)" icon>
+                        <v-icon color="amber darken-3">mdi-crown</v-icon>
+                    </v-btn>
+                </v-list-item-action>
+            </v-list-item>
+        </template>
+    </v-list>
+</v-container>
 </template>
 
 <script>
@@ -31,21 +29,28 @@ import $ from "jquery";
 import {
     apiUrl
 } from "../assets/globals";
-
+import ical from 'ical-generator';
+import FileSaver from 'file-saver';
 import moment from "moment";
 
 export default {
     name: "TimeFrame",
-    props: ["headers", "item", "groupId", "eventId", "selectedTimeFrame"],
+    props: ["headers", "title", "groupId", "eventId", "selectedTimeFrame"],
     data: () => ({
         rankings: "",
     }),
     components: {},
     methods: {
-        submit() {
-            
-        }
-        ,formatDateTime(ISOTime) {
+        downloadCal(from, to) {
+            const cal = ical();
+            cal.createEvent({
+                start: from,
+                end: to,
+                summary: this.title
+            });
+            FileSaver.saveAs(cal.toBlob(), 'event.ics');
+        },        
+        formatDateTime(ISOTime) {
             return moment(ISOTime).format("DD.MM.YY HH:mm");
         },
         setSelectedTimeframe(timeframeId) {
@@ -61,7 +66,6 @@ export default {
     created() {
         $.get(apiUrl + "/api/v1/group/" + this.groupId + "/events/" + this.eventId + "/ranking")
             .done(response => {
-                console.log(response);
                 this.rankings = response;
             })
             .always(this.isUpdating = false);
