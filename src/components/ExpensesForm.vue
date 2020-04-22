@@ -2,23 +2,21 @@
 <v-container fluid>
     <v-row justify="center">
         <v-col>
-            <v-card flat>
-                <v-form v-model="valid" ref="form" :lazy-validation="true">
-                    <v-card-title primary-title>
-                        Add expenses
-                    </v-card-title>
-                    <v-text-field :rules="amountRules" v-model="amount" name="amount" label="Amount in CHF" required reactive></v-text-field>
-                    <v-text-field v-model="note" name="description" label="Note" reactive></v-text-field>
-                    <v-autocomplete :rules="[v => !!v || 'Field is required!']" v-model="paidBy" :items="groupMembers" item-text="name" item-value="id" label="Paid by" dense chips small-chips deletable-chips reactive required :search-input.sync="searchInput" @change="searchInput=''"></v-autocomplete>
-                    <v-autocomplete :rules="[v => !!v || 'Field is required!']" v-model="usedBy" :items="groupMembers" item-text="name" item-value="id" label="Used by" dense chips multiple small-chips deletable-chips reactive required :search-input.sync="searchInput" @change="searchInput=''"></v-autocomplete>
+            <v-form v-model="valid" ref="form" :lazy-validation="true">
+                <v-card-title class="headline" primary-title>
+                    Add expenses
+                </v-card-title>
+                <v-text-field :rules="amountRules" v-model="amount" name="amount" label="Amount in CHF" required reactive></v-text-field>
+                <v-text-field v-model="note" name="description" label="Note" reactive></v-text-field>
+                <v-autocomplete :rules="[v => !!v || 'Field is required!']" v-model="paidBy" :items="groupMembers" item-text="name" item-value="id" label="Paid by" dense chips small-chips deletable-chips reactive required :search-input.sync="searchInput" @change="searchInput=''"></v-autocomplete>
+                <v-autocomplete :rules="[v => !!v || 'Field is required!']" v-model="usedBy" :items="groupMembers" item-text="name" item-value="id" label="Used by" dense chips multiple small-chips deletable-chips reactive required :search-input.sync="searchInput" @change="searchInput=''"></v-autocomplete>
 
-                    <v-card-actions>
-                        <v-btn @click="submit" :disabled="!valid" class="green darken-3" dark>
-                            {{ submitText }}
-                        </v-btn>
-                    </v-card-actions>
-                </v-form>
-            </v-card>
+                <v-card-actions>
+                    <v-btn @click="submit" :disabled="!valid" class="green darken-3" dark>
+                        {{ submitText }}
+                    </v-btn>
+                </v-card-actions>
+            </v-form>
         </v-col>
     </v-row>
 </v-container>
@@ -50,10 +48,8 @@ export default {
         getGroupMembers() {
             $.get(apiUrl + "/api/v1/group/" + this.groupId).done(
                 res => {
-                    res.assignements.forEach(element => {
-                        $.get(apiUrl + "/api/v1/user/" + element.participantId).done(member => {
-                            this.groupMembers.push(member);
-                        });
+                    res.assignements.forEach(assignment => {
+                        this.groupMembers.push(assignment.participant);
                     });
                 });
         },
@@ -71,7 +67,7 @@ export default {
                     url: apiUrl + "/api/v1/group/" + this.groupId + "/events/" + this.eventId + "/expenses",
                     data: formData,
                     success: () => {
-                        this.$refs.form.reset();                        
+                        this.$refs.form.reset();
                         this.submitText = 'Expense added';
                         setTimeout(() => {
                             this.submitText = 'Submit'

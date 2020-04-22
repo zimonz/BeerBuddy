@@ -1,7 +1,7 @@
 <template>
 <v-container fluid>
     <v-list four-line subheader>
-        <v-subheader>All expenses</v-subheader>
+        <v-subheader class="headline">All expenses</v-subheader>
         <template v-for="item in items">
             <v-list-item :key="item.id">
                 <v-list-item-content>
@@ -25,7 +25,6 @@
                     </v-btn>
                 </v-list-item-action>
             </v-list-item>
-            <v-divider :key="item.email"></v-divider>
         </template>
     </v-list>
 </v-container>

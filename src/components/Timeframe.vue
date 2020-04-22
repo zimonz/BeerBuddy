@@ -65,8 +65,11 @@ export default {
                 endSlotId: this.item.slots[this.range[1]].id,
                 startSlotId: this.item.slots[this.range[0]].id,
                 timeframeId: this.timeframeId,
-                userId: this.userId()
+                participantId: this.userId()
             });
+
+            console.log(formData);
+            
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",

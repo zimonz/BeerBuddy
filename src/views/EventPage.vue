@@ -3,7 +3,11 @@
     <v-row justify="center">
         <v-col cols="12" lg="12" md="12" sm="12" xs="12">
             <v-card flat>
-                <v-card-title primary-title>{{this.title}}</v-card-title>
+                <v-card-title class="display-1" primary-title>
+                    {{this.title}}
+                    <v-spacer></v-spacer>
+                    <v-btn v-if="!settlement" color="red lighten-2 white--text" @click="genSettlement">Generate settlement</v-btn>
+                </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
                     <v-row>
@@ -15,8 +19,8 @@
                                             <v-toolbar-title>Timeframes</v-toolbar-title>
                                         </v-toolbar>
                                     </template>
-                                    <template v-slot:expanded-item="{ headers, item }" >
-                                        <TimeFrame v-bind:headers="headers" v-bind:item="item" v-bind:groupId="groupId" v-bind:eventId="eventId"/>
+                                    <template v-slot:expanded-item="{ headers, item }">
+                                        <TimeFrame v-bind:headers="headers" v-bind:item="item" v-bind:groupId="groupId" v-bind:eventId="eventId" />
                                     </template>
                                 </v-data-table>
                             </template>
@@ -25,15 +29,14 @@
                             <template>
                                 <TimeframeRanking v-bind:groupId="groupId" v-bind:eventId="eventId" v-bind:selectedTimeFrame="this.selectedTimeFrame" />
                             </template>
-                            <v-divider></v-divider>
                         </v-col>
                         <v-col cols="12">
                             <template>
-                                <ExpensesForm v-bind:groupId="groupId" v-bind:eventId="eventId" />
+                                <ExpensesForm v-if="!settlement" v-bind:groupId="groupId" v-bind:eventId="eventId" />
                             </template>
                         </v-col>
                         <v-col cols="12">
-                            <SettlementList v-if="settlement" v-bind:settlementEntries="settlement" reactive/>
+                            <SettlementList v-if="settlement" v-bind:settlementEntries="settlement" reactive />
                         </v-col>
                         <v-col cols="12">
                             <ExpensesList v-bind:groupId="groupId" v-bind:eventId="eventId" />
@@ -95,9 +98,35 @@ export default {
         ],
     }),
     components: {
-        TimeFrame,TimeframeRanking, ExpensesForm, ExpensesList, SettlementList
+        TimeFrame,
+        TimeframeRanking,
+        ExpensesForm,
+        ExpensesList,
+        SettlementList
     },
     methods: {
+        pullData() {
+            $.get(
+                apiUrl + "/api/v1/group/" + this.groupId + "/events/" + this.eventId
+            ).done(res => {
+                if (res.settlement) this.settlement = res.settlement.settlementEntries;
+                this.title = res.name;
+                this.timeFrames = res.timeFrames;
+                this.selectedTimeFrame = res.selectedTimeFrame;
+                this.timeFrames.forEach(element => {
+                    this.timeFramesTable.push({
+                        "id": element.id,
+                        "fromDateTime": element.fromTime,
+                        "toDateTime": element.toTime,
+                        "slots": element.slots,
+                        "datefrom": this.formatDate(element.fromTime),
+                        "dateto": this.formatDate(element.toTime),
+                        "timefrom": this.formatTime(element.fromTime),
+                        "timeto": this.formatTime(element.toTime)
+                    });
+                });
+            });
+        },
         formatDate(ISOTime) {
             return moment(ISOTime).format("dd, DD.MM.YYYY");
         },
@@ -114,29 +143,13 @@ export default {
                 this.expanded = [];
             }
             return 0;
+        },
+        genSettlement() {
+            $.post(apiUrl + '/api/v1/group/' + this.groupId + '/events/' + this.eventId + '/expenses/settlement').done(this.pullData());
         }
     },
     created() {
-        $.get(
-            apiUrl + "/api/v1/group/" + this.groupId + "/events/" + this.eventId
-        ).done(res => {
-            this.settlement = res.settlement.settlementEntries;
-            this.title = res.name;
-            this.timeFrames = res.timeFrames;
-            this.selectedTimeFrame = res.selectedTimeFrame;
-            this.timeFrames.forEach(element => {
-                this.timeFramesTable.push({
-                    "id": element.id,
-                    "fromDateTime": element.fromTime,
-                    "toDateTime": element.toTime,
-                    "slots": element.slots,
-                    "datefrom": this.formatDate(element.fromTime),
-                    "dateto": this.formatDate(element.toTime),
-                    "timefrom": this.formatTime(element.fromTime),
-                    "timeto": this.formatTime(element.toTime)
-                });
-            });
-        });
+        this.pullData()
     }
 };
 </script>
