@@ -14,8 +14,11 @@
                     <v-btn v-if="selectedTimeFrame == null" @click="setSelectedTimeframe(ranking.originalTimeframe.id)" icon>
                         select<v-icon color="grey lighten-1">mdi-crown</v-icon>
                     </v-btn>
-                    <v-btn v-if="selectedTimeFrame != null  && ranking.originalTimeframe.id == selectedTimeFrame.id" @click="downloadCal(ranking.from, ranking.to)" icon>
+                    <v-btn v-if="selectedTimeFrame != null  && ranking.originalTimeframe.id == selectedTimeFrame.id" icon>
                         <v-icon color="amber darken-3">mdi-crown</v-icon>
+                    </v-btn>
+                    <v-btn v-if="selectedTimeFrame != null  && ranking.originalTimeframe.id == selectedTimeFrame.id" @click="downloadCal(ranking.from, ranking.to)" icon>
+                        <v-icon>mdi-calendar</v-icon>
                     </v-btn>
                 </v-list-item-action>
             </v-list-item>
