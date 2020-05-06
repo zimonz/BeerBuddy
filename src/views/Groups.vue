@@ -14,7 +14,6 @@
                     <GroupForm v-show="formVisible" />
                 </v-expand-transition>
             </v-card>
-                <v-divider inset></v-divider>
         </v-col>
         <v-col lg="8" md="10" sm="10" xs="12">
             <v-card flat>

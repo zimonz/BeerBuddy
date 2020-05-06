@@ -1,9 +1,18 @@
 <template>
   <v-container fluid>
+      <v-system-bar color="grey lighten-3" lights-out absolute>
+        <v-btn small class="mr-2" color="grey lighten-1" @click="$router.go(-1)" icon>
+                        <v-icon>mdi-arrow-left-circle</v-icon>
+                    </v-btn>
+        <v-spacer></v-spacer>
+        <span>{{ groupName }}</span>
+        <v-spacer></v-spacer>
+      </v-system-bar>
     <v-row justify="center">
-      <v-col cols="12" lg="12" md="12" sm="12" xs="12">
-        <v-card flat>
-          <v-card-title class="display-1" primary-title>
+      <v-col cols="12">
+        <v-card flat>          
+          <v-card-title class="headline" primary-title>
+              
             {{this.title}}
             <v-spacer></v-spacer>
             <v-btn
@@ -13,9 +22,9 @@
             >Generate settlement</v-btn>
           </v-card-title>
           <v-divider></v-divider>
-          <v-card-text>
+          <v-card-text class="pa-0">
             <v-row justify="center">
-              <v-col v-if="!selectedTimeFrame" cols="12">
+              <v-col v-if="!selectedTimeFrame" cols="12"  sm="12" md="8" lg="10">
                 <template>
                   <v-data-table
                     :headers="headers"
@@ -42,7 +51,7 @@
                   </v-data-table>
                 </template>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="12" sm="12" md="8" lg="10">
                 <TimeframeRanking
                   v-bind:title="title"
                   v-bind:groupId="groupId"
@@ -50,20 +59,19 @@
                   v-bind:selectedTimeFrame="this.selectedTimeFrame"
                 />
               </v-col>
-
-              <v-col cols="12">
+              <v-col cols="12" sm="12" md="8" lg="10">
+                <v-divider></v-divider>
+              </v-col>
+              <v-col cols="12"  sm="12" md="8" lg="10">
                 <SettlementList v-if="settlement" v-bind:settlementEntries="settlement" reactive />
               </v-col>
-              <v-col cols="12">
-                <v-divider inset></v-divider>
-              </v-col>
-              <v-col cols="5" sm="12" md="6" lg="4">
+              <v-col cols="12" sm="12" md="6" lg="4">
                 <ExpensesForm v-if="!settlement" v-bind:groupId="groupId" v-bind:eventId="eventId" />
               </v-col>
-              <v-col cols="12">
-                <v-divider inset></v-divider>
+              <v-col cols="12" sm="12" md="8" lg="10">
+                <v-divider></v-divider>
               </v-col>
-              <v-col cols="8" sm="12" md="8" lg="10">
+              <v-col cols="12" sm="12" md="8" lg="10">
                 <ExpensesList v-bind:groupId="groupId" v-bind:eventId="eventId" />
               </v-col>
             </v-row>
@@ -89,6 +97,7 @@ export default {
   name: "Event",
   props: ["groupId", "eventId"],
   data: () => ({
+    groupName: null,
     expanded: [],
     settlement: null,
     singleExpand: true,
@@ -150,6 +159,7 @@ export default {
           });
         });
       });
+      $.get(apiUrl + "/api/v1/group/" + this.groupId).done(res => { this.groupName = res.name });
     },
     formatDate(ISOTime) {
       return moment(ISOTime).format("dd, DD.MM.YYYY");
