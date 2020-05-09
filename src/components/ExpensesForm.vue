@@ -48,7 +48,7 @@ export default {
         getGroupMembers() {
             $.get(apiUrl + "/api/v1/group/" + this.groupId).done(
                 res => {
-                    res.assignements.forEach(assignment => {
+                    res.assignments.forEach(assignment => {
                         this.groupMembers.push(assignment.participant);
                     });
                 });

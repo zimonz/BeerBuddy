@@ -10,7 +10,7 @@
               <template>
                 <v-chip-group :key="componentKey">
                   <v-chip
-                    v-for="assignement in item.assignements"
+                    v-for="assignement in item.assignments"
                     :key="(assignement.participant.name, assignement.participant.id)"
                     :value="assignement.participant.id"
                     :color="chipColor(assignement)"
@@ -48,8 +48,8 @@ export default {
   methods: {
     populateUI: function() {
       this.items.forEach(item => {
-        item.assignements.sort((a,b) => { return b.admin - a.admin });
-        item.assignements.forEach(assignement => {
+        item.assignments.sort((a,b) => { return b.admin - a.admin });
+        item.assignments.forEach(assignement => {
           if (this.userMap.get(assignement.participant.id) == null)
             $.get(apiUrl + "/api/v1/user/" + assignement.participant.id).done(
               res => {
