@@ -48,7 +48,6 @@ export default {
             if (this.$refs.form.validate()) {
                 let admin = this.userId();
                 let nonAdmin = this.participants;
-                nonAdmin.shift();
                 let formData = JSON.stringify({
                     'admins': [admin],
                     'description': this.description,
