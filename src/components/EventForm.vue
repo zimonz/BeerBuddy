@@ -1,7 +1,6 @@
 <template>
 <v-form v-model="valid" ref="form" lazy-validation>
     <v-container>
-        
 
         <v-row justify="center">
 
@@ -81,8 +80,8 @@
                             </v-btn>
                         </v-card>
                     </v-expand-transition>
-                </v-card>   
-            </v-col>   
+                </v-card>
+            </v-col>
         </v-row>
         <v-row>
             <v-btn @click="submit" class="green darken-3" dark>
@@ -96,12 +95,14 @@
 <script>
 // import axios from "axios";
 import $ from 'jquery'
-import {apiUrl} from '../assets/globals';
+import {
+    apiUrl
+} from '../assets/globals';
 
 export default {
     props: ['groupId'],
     data: () => ({
-        eventname:'',
+        eventname: '',
         timeframes: [],
         timeframeFormVisible: false,
         valid: true,
@@ -123,7 +124,12 @@ export default {
     methods: {
         addTimeframe() {
             if (this.$refs.form.validate()) {
-                this.timeframes.push({date: this.date, timeFrom: this.timeFrom, timeTo: this.timeTo, wholeDay: this.wholeDay });
+                this.timeframes.push({
+                    date: this.date,
+                    timeFrom: this.timeFrom,
+                    timeTo: this.timeTo,
+                    wholeDay: this.wholeDay
+                });
                 this.date = null;
                 this.timeFrom = null;
                 this.timeTo = null;
@@ -141,13 +147,19 @@ export default {
                 url: apiUrl + "/api/v1/group/" + this.groupId + "/events/",
                 data: this.eventname,
                 contentType: "application/json; charset=utf-8",
-                success: (data) => { 
+                success: (data) => {
                     let timeframes = [];
                     this.timeframes.forEach((item) => {
-                        if(item.wholeDay) {
-                            timeframes.push({from: new Date(Date.parse(item.date + 'T00:00:00')), to: new Date(Date.parse(item.date + 'T23:59:59')) });
+                        if (item.wholeDay) {
+                            timeframes.push({
+                                from: new Date(Date.parse(item.date + 'T00:00:00')),
+                                to: new Date(Date.parse(item.date + 'T23:59:59'))
+                            });
                         } else {
-                            timeframes.push({from: new Date(Date.parse(item.date + 'T' + item.timeFrom)), to: new Date(Date.parse(item.date + 'T' + item.timeTo)) });
+                            timeframes.push({
+                                from: new Date(Date.parse(item.date + 'T' + item.timeFrom)),
+                                to: new Date(Date.parse(item.date + 'T' + item.timeTo))
+                            });
                         }
                     });
                     let formData = JSON.stringify(timeframes);
@@ -156,12 +168,12 @@ export default {
                         contentType: "application/json; charset=utf-8",
                         url: apiUrl + "/api/v1/group/" + this.groupId + "/events/" + data.id + "/timeframe",
                         data: formData,
-                        success: () => { 
+                        success: () => {
+                            this.eventHub.$emit('updateEvents');
                             this.eventname = '';
                             this.timeframes = [];
                         }
                     });
-                    this.eventHub.$emit('updateEvents');
                 }
             });
             return 0;
@@ -169,8 +181,9 @@ export default {
     }
 };
 </script>
+
 <style scoped>
-    button.green.darken-3.addTimeFrameBtn.v-btn.v-btn--contained.v-btn--disabled.theme--dark.v-size--default {
-        background-color: #2E7D32 !important;
-    }
+button.green.darken-3.addTimeFrameBtn.v-btn.v-btn--contained.v-btn--disabled.theme--dark.v-size--default {
+    background-color: #2E7D32 !important;
+}
 </style>

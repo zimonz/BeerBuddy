@@ -72,6 +72,7 @@ export default {
                         setTimeout(() => {
                             this.submitText = 'Submit'
                         }, 5000);
+                        this.eventHub.$emit('updateExpenses')
                     },
                     dataType: "text",
                     contentType: "application/json"

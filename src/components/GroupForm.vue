@@ -60,11 +60,7 @@ export default {
                     url: apiUrl + "/api/v1/group",
                     data: formData,
                     success: () => {
-                        $.get(apiUrl + "/api/v1/group")
-                            .done(res => {
-                                console.log(res);
-                                this.eventHub.$emit('updateGroups');
-                            });
+                        this.eventHub.$emit('updateGroups');
                         this.$refs.form.reset();
                     },
                     dataType: "text",

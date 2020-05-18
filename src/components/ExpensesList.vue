@@ -44,6 +44,9 @@ export default {
     },
     created() {
         this.getExpenses();
+        this.eventHub.$on('updateExpenses', () => {
+            this.getExpenses();
+        });
     }
 };
 </script>

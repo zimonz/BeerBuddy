@@ -67,8 +67,6 @@ export default {
                 timeframeId: this.timeframeId,
                 participantId: this.userId()
             });
-
-            console.log(formData);
             
             $.ajax({
                 type: "POST",
@@ -87,6 +85,7 @@ export default {
                     this.btnColor = 'green darken-2';
                     this.btnLabel = 'Changes saved';
                     this.btnIcon = 'mdi-check-circle';
+                    this.eventHub.$emit('updateTimeframeRanking');
                 }
             });
 
