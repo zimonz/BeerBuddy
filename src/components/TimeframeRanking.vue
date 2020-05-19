@@ -81,6 +81,8 @@ export default {
                     "/selectedTimeFrame",
                 data: JSON.stringify(timeframeId),
                 contentType: "application/json; charset=utf-8"
+            }).done(()=>{
+                this.eventHub.$emit('updateEvent');
             });
             this.eventHub.$emit('updateTimeframeRanking');
             return 0;

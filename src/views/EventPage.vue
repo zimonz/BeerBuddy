@@ -172,6 +172,9 @@ export default {
     },
     created() {
         this.pullData();
+         this.eventHub.$on('updateEvent', () => {
+            this.pullData();
+        });
     }
 };
 </script>
